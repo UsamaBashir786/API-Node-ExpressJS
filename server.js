@@ -5,6 +5,7 @@
 
 const express = require('express');
 const path = require('path');
+const open = require('open'); // ⬅️ Add this line
 const app = express();
 
 // ===================
@@ -14,9 +15,20 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Update your mock posts data to include createdAt timestamps
 let posts = [
-  {id : 1, title : "First Post", content : "This is the first post."},
-  {id : 2, title : "Second Post", content : "This is the second post."}
+  { 
+    id: 1, 
+    title: "First Post", 
+    content: "This is the first post.",
+    createdAt: new Date().toISOString() // Add this line
+  },
+  { 
+    id: 2, 
+    title: "Second Post", 
+    content: "This is the second post.",
+    createdAt: new Date().toISOString() // Add this line
+  }
 ];
 
 // ===================
@@ -68,12 +80,13 @@ app.get('/api/posts/:id', (req, res) => {
   post ? res.json(post) : res.status(404).send('Post not found');
 });
 
-// Create a new post
+// Update the POST endpoint to include createdAt
 app.post('/api/posts', (req, res) => {
   const newPost = {
     id: posts.length + 1,
     title: req.body.title,
     content: req.body.content,
+    createdAt: new Date().toISOString() // Add this line
   };
   posts.push(newPost);
   res.status(201).json(newPost);
@@ -91,10 +104,10 @@ app.delete('/api/posts/:id', (req, res) => {
 // ===================
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`Server started on http://localhost:PORT`);
+  console.log(`Server started on http://localhost:${PORT}`); // Corrected this line
   console.log(`Available Routes:`);
-  console.log(`- Home: http://localhost:PORT`);
-  console.log(`- Login: http://localhost:PORT/login`);
-  console.log(`- Register: http://localhost:PORT/register`);
-  console.log(`- Contact: http://localhost:PORT/contact`);
+  console.log(`- Home: http://localhost:${PORT}`); // Corrected this line
+  console.log(`- Login: http://localhost:${PORT}/login`);
+  console.log(`- Register: http://localhost:${PORT}/register`);
+  console.log(`- Contact: http://localhost:${PORT}/contact`);
 });
